@@ -16,7 +16,7 @@ namespace Novacode
 		private bool? italic;
 		private StrikeThrough? strikethrough;
 		private Script? script;
-		private Highlight? highlight;
+		private Highlight? highlight;       //文字醒目提示色彩|高亮
 		private double? size;
 		private Color? fontColor;
 		private Color? underlineColor;
@@ -28,6 +28,8 @@ namespace Novacode
 		private int? kerning;
 		private int? position;
 		private double? spacing;
+
+        //private TextBorders textborders = null;       //文字框線
 
 		private CultureInfo language = null;
 
@@ -50,6 +52,11 @@ namespace Novacode
 
             rPr = new XElement(XName.Get("rPr", DocX.w.NamespaceName));
         }
+
+        /// <summary>
+        /// 文字框線
+        /// </summary>
+        public TextBorders TextBorder { get; set; } = null;
 
         /// <summary>
         /// Text language
@@ -290,6 +297,20 @@ namespace Novacode
 						break;
 					}
 				}
+
+                //文字框線樣式
+                if(TextBorder != null)
+                {
+                    string htmlcolor = TextBorder.borderColor == Color.Transparent ? "auto"
+                        : System.Drawing.ColorTranslator.ToHtml(TextBorder.borderColor);
+
+                    rPr.Add(new XElement(XName.Get("bdr", DocX.w.NamespaceName), 
+                        new XAttribute(XName.Get("val", DocX.w.NamespaceName), TextBorder.borderStyle.ToString().Replace("Tcbs_", "")),
+                        new XAttribute(XName.Get("sz", DocX.w.NamespaceName), (int)TextBorder.borderWidth),
+                        new XAttribute(XName.Get("space", DocX.w.NamespaceName), TextBorder.borderSpace),
+                        new XAttribute(XName.Get("color", DocX.w.NamespaceName), htmlcolor)
+                        ));
+                }
 
 				if (capsStyle.HasValue)
 				{

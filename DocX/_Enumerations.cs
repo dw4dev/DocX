@@ -38,18 +38,50 @@ namespace Novacode
         roman
     }
 
+    /// <summary>
+    /// 框線寬度
+    /// </summary>
     public enum BorderSize
     {
-        one,
-        two,
-        three,
-        four,
-        five,
-        six,
-        seven,
-        eight,
-        nine
+        /// <summary>
+        /// 1/4 pt | val = 8 * 1/4 = 2
+        /// </summary>
+        one = 2,
+        /// <summary>
+        /// 1/2 pt | val= 8 * 1/2 = 4
+        /// </summary>
+        two = 4,
+        /// <summary>
+        /// 3/4 pt | val = 8 * 3/4 = 6
+        /// </summary>
+        three = 6,
+        /// <summary>
+        /// 1 pt | val = 8 * 1 = 8
+        /// </summary>
+        four = 8,
+        /// <summary>
+        /// 1 1/2 pt | val = 8 * 1 1/2 = 12
+        /// </summary>
+        five = 12,
+        /// <summary>
+        /// 2 1/4 pt | val = 8 * 2 1/4 = 18
+        /// </summary>
+        six = 18,
+        /// <summary>
+        /// 3 pt | val = 8 * 3 = 24
+        /// </summary>
+        seven = 24,
+        /// <summary>
+        /// 4 1/2 pt | val = 8 * 4 1/2 = 36
+        /// </summary>
+        eight = 36,
+        /// <summary>
+        /// 6 pt | val = 8 * 6 = 48
+        /// </summary>
+        nine = 48
     }
+
+    
 
     public enum EditRestrictions
     {
@@ -61,38 +93,131 @@ namespace Novacode
     }
 
     /// <summary>
+    /// <para>(字元|段落|)框線樣式</para>
     /// Table Cell Border styles
     /// Added by lckuiper @ 20101117
     /// source: http://msdn.microsoft.com/en-us/library/documentformat.openxml.wordprocessing.tablecellborders.aspx
     /// </summary>
     public enum BorderStyle
     {
+        /// <summary>
+        /// 無框線
+        /// <para>no border</para>
+        /// </summary>
         Tcbs_none = 0,
+        /// <summary>
+        /// 實線
+        /// <para>a single line</para>
+        /// </summary>
         Tcbs_single,
+        /// <summary>
+        /// <para>a single line</para>
+        /// </summary>
         Tcbs_thick,
+        /// <summary>
+        /// 雙實線
+        /// <para>a double line</para>
+        /// </summary>
         Tcbs_double,
+        /// <summary>
+        /// <para>a dotted line</para>
+        /// </summary>
         Tcbs_dotted,
+        /// <summary>
+        /// 短線 ------
+        /// <para>a dashed line</para>
+        /// </summary>
         Tcbs_dashed,
+        /// <summary>
+        /// 點與短線 .-.-.
+        /// <para>a line with alternating dots and dashes </para>
+        /// </summary>
         Tcbs_dotDash,
+        /// <summary>
+        /// 點點短線 ..-..-..-
+        /// <para></para>
+        /// </summary>
         Tcbs_dotDotDash,
+        /// <summary>
+        /// <para>a triple line</para>
+        /// </summary>
         Tcbs_triple,
+        /// <summary>
+        /// <para>a thick line contained within a thin line with a small intermediate gap</para>
+        /// </summary>
         Tcbs_thinThickSmallGap,
+        /// <summary>
+        /// <para>a thick line contained within a thin line with a small intermediate gap</para>
+        /// </summary>
         Tcbs_thickThinSmallGap,
+        /// <summary>
+        /// <para>a thin-thick-thin line with a small gap</para>
+        /// </summary>
         Tcbs_thinThickThinSmallGap,
+        /// <summary>
+        /// <para>a thick line contained within a thin line with a medium-sized intermediate gap</para>
+        /// </summary>
         Tcbs_thinThickMediumGap,
+        /// <summary>
+        /// <para>a thick line contained within a thin line with a medium-sized intermediate gap</para>
+        /// </summary>
         Tcbs_thickThinMediumGap,
+        /// <summary>
+        /// <para>a thin-thick-thin line with a medium gap</para>
+        /// </summary>
         Tcbs_thinThickThinMediumGap,
+        /// <summary>
+        /// <para>a thick line contained within a thin line with a medium-sized intermediate gap</para>
+        /// </summary>
         Tcbs_thinThickLargeGap,
+        /// <summary>
+        /// <para>a thick line contained within a thin line with a large-sized intermediate gap</para>
+        /// </summary>
         Tcbs_thickThinLargeGap,
+        /// <summary>
+        /// <para>a thin-thick-thin line with a large gap</para>
+        /// </summary>
         Tcbs_thinThickThinLargeGap,
+        /// <summary>
+        /// 波浪線
+        /// <para>a wavy line</para>
+        /// </summary>
         Tcbs_wave,
+        /// <summary>
+        /// 雙波浪線
+        /// <para>a double wavy line</para>
+        /// </summary>
         Tcbs_doubleWave,
+        /// <summary>
+        /// 小間隔短線 - - -  
+        /// <para>a dashed line with small gaps</para>
+        /// </summary>
         Tcbs_dashSmallGap,
+        /// <summary>
+        /// 點線 ......
+        /// <para>a line with a series of alternating thin and thick strokes </para>
+        /// </summary>
         Tcbs_dashDotStroked,
+        /// <summary>
+        /// <para> a three-staged gradient line, getting darker towards the paragraph</para>
+        /// </summary>
         Tcbs_threeDEmboss,
+        /// <summary>
+        /// <para>a three-staged gradient like, getting darker away from the paragraph</para>
+        /// </summary>
         Tcbs_threeDEngrave,
+        /// <summary>
+        /// an outset set of lines
+        /// </summary>
         Tcbs_outset,
+        /// <summary>
+        /// an inset set of lines
+        /// </summary>
         Tcbs_inset,
+        /// <summary>
+        /// 無框線
+        /// <para>no border</para>
+        /// </summary>
         Tcbs_nil
     }
 
@@ -816,14 +941,6 @@ namespace Novacode
         btLr,
         right
     };
-
-    /// <summary>
-    /// 字元框線樣式
-    /// </summary>
-    public enum TextBorders
-    {
-
-    }
 
     /// <summary>
     /// Represents the switches set on a TOC.
