@@ -1,3 +1,14 @@
+DocX 是個不錯好用的函式庫，輕巧簡單，對於處理 docx 文件很有幫助。
+不過原作者(Cathal Coffey)似乎久久未維護更新，在使用上也遭遇一些問題，
+所以會針對自己使用上遇到的問題進行更新，簡單維護。
+
+感謝原作者 Cathal Coffey 貢獻這麼棒的源碼。
+
+下列為原作者相關資訊...
+---
+
+<img alt="DocX" src="https://download-codeplex.sec.s-msft.com/Download?ProjectName=docx&DownloadId=83756&Build=21031" />
+
 [GitHub](https://github.com/WordDocX/DocX) | [Blog](http://cathalscorner.blogspot.com/) |  [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=GHSZDFX6JHS2A&lc=GB&item_name=DocX%20library&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG_global%2egif%3aNonHosted)
 
 
