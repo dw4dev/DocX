@@ -29,7 +29,7 @@ namespace Novacode
 		private int? position;
 		private double? spacing;
 
-		private CultureInfo language;
+		private CultureInfo language = null;
 
         /// <summary>
         /// A text formatting.
@@ -44,7 +44,9 @@ namespace Novacode
             misc = Novacode.Misc.none;
 
             // Use current culture by default
-            language = CultureInfo.CurrentCulture;
+            // 在中文環境中，語系標籤似乎不是每個樣式都有的，相反的都是沒有 lang 這個標籤居多，
+            //   所以交給開發者自行設定，避免產生 XML 時有過多的標籤，導致比對樣式失敗
+            //language = CultureInfo.CurrentCulture;
 
             rPr = new XElement(XName.Get("rPr", DocX.w.NamespaceName));
         }
@@ -194,7 +196,7 @@ namespace Novacode
                             new XAttribute(XName.Get("ascii", DocX.w.NamespaceName), fontFamily.Name),
                             new XAttribute(XName.Get("hAnsi", DocX.w.NamespaceName), fontFamily.Name), // Added by Maurits Elbers to support non-standard characters. See http://docx.codeplex.com/Thread/View.aspx?ThreadId=70097&ANCHOR#Post453865
                             new XAttribute(XName.Get("cs", DocX.w.NamespaceName), fontFamily.Name),    // Added by Maurits Elbers to support non-standard characters. See http://docx.codeplex.com/Thread/View.aspx?ThreadId=70097&ANCHOR#Post453865
-			    new XAttribute(XName.Get("eastAsia", DocX.w.NamespaceName), fontFamily.Name)	// DOCX in china #57
+			                new XAttribute(XName.Get("eastAsia", DocX.w.NamespaceName), fontFamily.Name)	// DOCX in china #57
                         )
                     );
                 }

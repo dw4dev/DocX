@@ -1805,7 +1805,9 @@ namespace Novacode
                 throw new ArgumentOutOfRangeException();
 
             // Need some memory that can be updated by the recursive search for the XElement to Split.
-            int count = 0;
+            // count 用來當作文字個數計數用或定位計數
+            // 數字計數為 0 基底，若 count 設定為 0 則會導致抓取錯誤的 rPr 區段
+            int count = -1;
             Run theOne = null;
 
             GetFirstRunEffectedByEditRecursive(Xml, index, ref count, ref theOne, type);
