@@ -1842,6 +1842,7 @@ namespace Novacode
                         GetFirstRunEffectedByEditRecursive(e, index, ref count, ref theOne, type);
         }
 
+        
         /// <!-- 
         /// Bug found and fixed by krugs525 on August 12 2009.
         /// Use TFS compare to see exact code change.
@@ -4156,6 +4157,26 @@ namespace Novacode
             ).ToList();
 
             return query;
+        }
+
+        /// <summary>
+        /// 找尋符合指定格式的文字節點
+        /// </summary>
+        /// <param name="ff"></param>
+        /// <returns></returns>
+        public List<XNode> FindMatchFormattedNodes(Formatting ff)
+        {
+
+        }
+
+        /// <summary>
+        /// 找尋符合指定格式的所有文字
+        /// </summary>
+        /// <param name="ff"></param>
+        /// <returns></returns>
+        public List<string> FindMatchFormattedTexts(Formatting ff)
+        {
+
         }
 
         /// <summary>

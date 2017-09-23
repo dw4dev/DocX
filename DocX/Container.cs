@@ -426,6 +426,26 @@ namespace Novacode
             return FindAll(str, RegexOptions.None);
         }
 
+        /// <summary>
+        /// 找尋符合指定格式的文字節點
+        /// </summary>
+        /// <param name="ff"></param>
+        /// <returns></returns>
+        public virtual List<XNode> FindMatchFormattedNodes(Formatting ff)
+        {
+
+        }
+
+        /// <summary>
+        /// 找尋符合指定格式的所有文字
+        /// </summary>
+        /// <param name="ff"></param>
+        /// <returns></returns>
+        public virtual List<string> FindMatchFormattedTexts(Formatting ff)
+        {
+
+        }
+
         public virtual List<int> FindAll(string str, RegexOptions options)
         {
             List<int> list = new List<int>();
