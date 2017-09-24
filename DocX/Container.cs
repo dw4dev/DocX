@@ -429,19 +429,37 @@ namespace Novacode
         /// <summary>
         /// 找尋符合指定格式的文字節點
         /// </summary>
-        /// <param name="ff"></param>
+        /// <param name="matchFormatting"></param>
         /// <returns></returns>
-        public virtual List<XNode> FindMatchFormattedNodes(Formatting ff)
+        public virtual List<XElement> FindMatchFormattedNodes(Formatting matchFormatting, 
+            bool IsIncludeHeader, bool IsIncludeFooter)
         {
+            // ReplaceText in Headers of the document.
+            var headerList = new List<Header> { Document.Headers.first, Document.Headers.even, Document.Headers.odd };
+            foreach (var header in headerList)
+                if (header != null)
+                    foreach (var paragraph in header.Paragraphs)
+                        paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
 
+            // ReplaceText int main body of document.
+            foreach (var paragraph in Paragraphs)
+                paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
+
+            // ReplaceText in Footers of the document.
+            var footerList = new List<Footer> { Document.Footers.first, Document.Footers.even, Document.Footers.odd };
+            foreach (var footer in footerList)
+                if (footer != null)
+                    foreach (var paragraph in footer.Paragraphs)
+                        paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
         }
 
         /// <summary>
         /// 找尋符合指定格式的所有文字
         /// </summary>
-        /// <param name="ff"></param>
+        /// <param name="matchFormatting"></param>
         /// <returns></returns>
-        public virtual List<string> FindMatchFormattedTexts(Formatting ff)
+        public virtual List<string> FindMatchFormattedTexts(Formatting matchFormatting,
+            bool IsIncludeHeader, bool IsIncludeFooter)
         {
 
         }

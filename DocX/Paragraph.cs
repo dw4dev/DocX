@@ -1138,12 +1138,12 @@ namespace Novacode
                     h_xml = (XElement)run.Xml.NextNode;
                 }
 
-			}
-			h_xml.SetAttributeValue( DocX.r + "id", Id );
+            }
+            h_xml.SetAttributeValue(DocX.r + "id", Id);
 
-			this.runs = Xml.Elements().Last().Elements( XName.Get( "r", DocX.w.NamespaceName ) ).ToList();
+            this.runs = Xml.Elements().Last().Elements(XName.Get("r", DocX.w.NamespaceName)).ToList();
 
-			return this;
+            return this;
         }
 
         /// <summary>
@@ -1675,8 +1675,8 @@ namespace Novacode
             {
                 using (System.Drawing.Image img = System.Drawing.Image.FromStream(packagePartStream, useEmbeddedColorManagement: false, validateImageData: false))
                 {
-                    cx = img.Width*9526;
-                    cy = img.Height*9526;
+                    cx = img.Width * 9526;
+                    cy = img.Height * 9526;
                 }
             }
 
@@ -1842,7 +1842,32 @@ namespace Novacode
                         GetFirstRunEffectedByEditRecursive(e, index, ref count, ref theOne, type);
         }
 
-        
+
+        /// <summary>
+        /// 遞迴尋找符合格式的文字節點
+        /// </summary>
+        /// <returns></returns>
+        internal void GetMatchFormattedNodesRecursive(
+            XElement Xml, Formatting matchFormatting, ref List<XElement> resultset,
+            MatchFormattingOptions fo = MatchFormattingOptions.SubsetMatch)
+        {
+            XElement pickup = Xml;
+
+            XElement rPr = Xml.Element(XName.Get("rPr", DocX.w.NamespaceName));
+
+            if (HelperFunctions.ContainsEveryChildOf(matchFormatting.Xml, rPr, fo))
+            {
+                while ((pickup.Name.LocalName != "r") && (pickup.Name.LocalName != "pPr"))
+                    pickup = Xml.Parent;
+
+                resultset.Add(pickup);
+            }
+
+            if (Xml.HasElements)
+                foreach (XElement child in Xml.Elements())
+                    GetMatchFormattedNodesRecursive(child, matchFormatting, ref resultset, fo);
+        }
+
         /// <!-- 
         /// Bug found and fixed by krugs525 on August 12 2009.
         /// Use TFS compare to see exact code change.
@@ -3694,33 +3719,33 @@ namespace Novacode
             return new DocProperty(Document, xml);
         }
 
-		/// <summary>
-		/// Removes characters from a Novacode.DocX.Paragraph.
-		/// </summary>
-		/// <example>
-		/// <code>
-		/// // Create a document using a relative filename.
-		/// using (DocX document = DocX.Load(@"C:\Example\Test.docx"))
-		/// {
-		///     // Iterate through the paragraphs
-		///     foreach (Paragraph p in document.Paragraphs)
-		///     {
-		///         // Remove the first two characters from every paragraph
-		///         p.RemoveText(0, 2, false);
-		///     }
-		///        
-		///     // Save all changes made to this document.
-		///     document.Save();
-		/// }// Release this document from memory.
-		/// </code>
-		/// </example>
-		/// <seealso cref="Paragraph.InsertText(int, string, bool, Formatting)"/>
-		/// <seealso cref="Paragraph.InsertText(string, bool, Formatting)"/>
-		/// <param name="index">The position to begin deleting characters.</param>
-		/// <param name="count">The number of characters to delete</param>
-		/// <param name="trackChanges">Track changes</param>
-		/// <param name="removeEmptyParagraph">Remove empty paragraph</param>
-		public void RemoveText(int index, int count, bool trackChanges = false, bool removeEmptyParagraph = true)
+        /// <summary>
+        /// Removes characters from a Novacode.DocX.Paragraph.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// // Create a document using a relative filename.
+        /// using (DocX document = DocX.Load(@"C:\Example\Test.docx"))
+        /// {
+        ///     // Iterate through the paragraphs
+        ///     foreach (Paragraph p in document.Paragraphs)
+        ///     {
+        ///         // Remove the first two characters from every paragraph
+        ///         p.RemoveText(0, 2, false);
+        ///     }
+        ///        
+        ///     // Save all changes made to this document.
+        ///     document.Save();
+        /// }// Release this document from memory.
+        /// </code>
+        /// </example>
+        /// <seealso cref="Paragraph.InsertText(int, string, bool, Formatting)"/>
+        /// <seealso cref="Paragraph.InsertText(string, bool, Formatting)"/>
+        /// <param name="index">The position to begin deleting characters.</param>
+        /// <param name="count">The number of characters to delete</param>
+        /// <param name="trackChanges">Track changes</param>
+        /// <param name="removeEmptyParagraph">Remove empty paragraph</param>
+        public void RemoveText(int index, int count, bool trackChanges = false, bool removeEmptyParagraph = true)
         {
             // Timestamp to mark the start of insert
             DateTime now = DateTime.Now;
@@ -3800,20 +3825,20 @@ namespace Novacode
                         }
                 }
 
-				// Removing of empty paragraph is allowed if text is empty and removeEmptyParagraph=true
-				bool removeEmpty = removeEmptyParagraph && GetElementTextLength( parentElement ) == 0;
-				if( parentElement.Parent != null )
-				{
-					// Need to make sure there is another paragraph in parent cell
-					removeEmpty &= parentElement.Parent.Name.LocalName == "tc" &&
-						parentElement.Parent.Elements( XName.Get( "p", DocX.w.NamespaceName ) ).Count() > 1;
+                // Removing of empty paragraph is allowed if text is empty and removeEmptyParagraph=true
+                bool removeEmpty = removeEmptyParagraph && GetElementTextLength(parentElement) == 0;
+                if (parentElement.Parent != null)
+                {
+                    // Need to make sure there is another paragraph in parent cell
+                    removeEmpty &= parentElement.Parent.Name.LocalName == "tc" &&
+                        parentElement.Parent.Elements(XName.Get("p", DocX.w.NamespaceName)).Count() > 1;
 
-					// Need to make sure there is no drawing element within the parent element.
-					// Picture elements contain no text length but they are still content.
-					removeEmpty &= parentElement.Descendants( XName.Get( "drawing", DocX.w.NamespaceName ) ).Count() == 0;
-				}
-				if( removeEmpty )
-					parentElement.Remove();
+                    // Need to make sure there is no drawing element within the parent element.
+                    // Picture elements contain no text length but they are still content.
+                    removeEmpty &= parentElement.Descendants(XName.Get("drawing", DocX.w.NamespaceName)).Count() == 0;
+                }
+                if (removeEmpty)
+                    parentElement.Remove();
             }
             while (processed < count);
 
@@ -3850,60 +3875,60 @@ namespace Novacode
             RemoveText(index, Text.Length - index, trackChanges);
         }
 
-		/// <summary>
-		/// Replaces all occurrences of a specified System.String in this instance, with another specified System.String.
-		/// </summary>
-		/// <example>
-		/// <code>
-		/// // Load a document using a relative filename.
-		/// using (DocX document = DocX.Load(@"C:\Example\Test.docx"))
-		/// {
-		///     // The formatting to match.
-		///     Formatting matchFormatting = new Formatting();
-		///     matchFormatting.Size = 10;
-		///     matchFormatting.Italic = true;
-		///     matchFormatting.FontFamily = new FontFamily("Times New Roman");
-		///
-		///     // The formatting to apply to the inserted text.
-		///     Formatting newFormatting = new Formatting();
-		///     newFormatting.Size = 22;
-		///     newFormatting.UnderlineStyle = UnderlineStyle.dotted;
-		///     newFormatting.Bold = true;
-		///
-		///     // Iterate through the paragraphs in this document.
-		///     foreach (Paragraph p in document.Paragraphs)
-		///     {
-		///         /* 
-		///          * Replace all instances of the string "wrong" with the string "right" and ignore case.
-		///          * Each inserted instance of "wrong" should use the Formatting newFormatting.
-		///          * Only replace an instance of "wrong" if it is Size 10, Italic and Times New Roman.
-		///          * SubsetMatch means that the formatting must contain all elements of the match formatting,
-		///          * but it can also contain additional formatting for example Color, UnderlineStyle, etc.
-		///          * ExactMatch means it must not contain additional formatting.
-		///          */
-		///         p.ReplaceText("wrong", "right", false, RegexOptions.IgnoreCase, newFormatting, matchFormatting, MatchFormattingOptions.SubsetMatch);
-		///     }
-		///
-		///     // Save all changes made to this document.
-		///     document.Save();
-		/// }// Release this document from memory.
-		/// </code>
-		/// </example>
-		/// <seealso cref="Paragraph.RemoveText(int, int, bool, bool)"/>
-		/// <seealso cref="Paragraph.RemoveText(int, bool)"/>
-		/// <seealso cref="Paragraph.InsertText(int, string, bool, Formatting)"/>
-		/// <seealso cref="Paragraph.InsertText(string, bool, Formatting)"/>
-		/// <param name="newValue">A System.String to replace all occurrences of oldValue.</param>
-		/// <param name="oldValue">A System.String to be replaced.</param>
-		/// <param name="options">A bitwise OR combination of RegexOption enumeration options.</param>
-		/// <param name="trackChanges">Track changes</param>
-		/// <param name="newFormatting">The formatting to apply to the text being inserted.</param>
-		/// <param name="matchFormatting">The formatting that the text must match in order to be replaced.</param>
-		/// <param name="fo">How should formatting be matched?</param>
-		/// <param name="escapeRegEx">True if the oldValue needs to be escaped, otherwise false. If it represents a valid RegEx pattern this should be false.</param>
-		/// <param name="useRegExSubstitutions">True if RegEx-like replace should be performed, i.e. if newValue contains RegEx substitutions. Does not perform named-group substitutions (only numbered groups).</param>
-		/// <param name="removeEmptyParagraph">Remove empty paragraph</param>
-		public void ReplaceText(string oldValue, string newValue, bool trackChanges = false, RegexOptions options = RegexOptions.None, Formatting newFormatting = null, Formatting matchFormatting = null, MatchFormattingOptions fo = MatchFormattingOptions.SubsetMatch, bool escapeRegEx = true, bool useRegExSubstitutions = false, bool removeEmptyParagraph = true)
+        /// <summary>
+        /// Replaces all occurrences of a specified System.String in this instance, with another specified System.String.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// // Load a document using a relative filename.
+        /// using (DocX document = DocX.Load(@"C:\Example\Test.docx"))
+        /// {
+        ///     // The formatting to match.
+        ///     Formatting matchFormatting = new Formatting();
+        ///     matchFormatting.Size = 10;
+        ///     matchFormatting.Italic = true;
+        ///     matchFormatting.FontFamily = new FontFamily("Times New Roman");
+        ///
+        ///     // The formatting to apply to the inserted text.
+        ///     Formatting newFormatting = new Formatting();
+        ///     newFormatting.Size = 22;
+        ///     newFormatting.UnderlineStyle = UnderlineStyle.dotted;
+        ///     newFormatting.Bold = true;
+        ///
+        ///     // Iterate through the paragraphs in this document.
+        ///     foreach (Paragraph p in document.Paragraphs)
+        ///     {
+        ///         /* 
+        ///          * Replace all instances of the string "wrong" with the string "right" and ignore case.
+        ///          * Each inserted instance of "wrong" should use the Formatting newFormatting.
+        ///          * Only replace an instance of "wrong" if it is Size 10, Italic and Times New Roman.
+        ///          * SubsetMatch means that the formatting must contain all elements of the match formatting,
+        ///          * but it can also contain additional formatting for example Color, UnderlineStyle, etc.
+        ///          * ExactMatch means it must not contain additional formatting.
+        ///          */
+        ///         p.ReplaceText("wrong", "right", false, RegexOptions.IgnoreCase, newFormatting, matchFormatting, MatchFormattingOptions.SubsetMatch);
+        ///     }
+        ///
+        ///     // Save all changes made to this document.
+        ///     document.Save();
+        /// }// Release this document from memory.
+        /// </code>
+        /// </example>
+        /// <seealso cref="Paragraph.RemoveText(int, int, bool, bool)"/>
+        /// <seealso cref="Paragraph.RemoveText(int, bool)"/>
+        /// <seealso cref="Paragraph.InsertText(int, string, bool, Formatting)"/>
+        /// <seealso cref="Paragraph.InsertText(string, bool, Formatting)"/>
+        /// <param name="newValue">A System.String to replace all occurrences of oldValue.</param>
+        /// <param name="oldValue">A System.String to be replaced.</param>
+        /// <param name="options">A bitwise OR combination of RegexOption enumeration options.</param>
+        /// <param name="trackChanges">Track changes</param>
+        /// <param name="newFormatting">The formatting to apply to the text being inserted.</param>
+        /// <param name="matchFormatting">The formatting that the text must match in order to be replaced.</param>
+        /// <param name="fo">How should formatting be matched?</param>
+        /// <param name="escapeRegEx">True if the oldValue needs to be escaped, otherwise false. If it represents a valid RegEx pattern this should be false.</param>
+        /// <param name="useRegExSubstitutions">True if RegEx-like replace should be performed, i.e. if newValue contains RegEx substitutions. Does not perform named-group substitutions (only numbered groups).</param>
+        /// <param name="removeEmptyParagraph">Remove empty paragraph</param>
+        public void ReplaceText(string oldValue, string newValue, bool trackChanges = false, RegexOptions options = RegexOptions.None, Formatting newFormatting = null, Formatting matchFormatting = null, MatchFormattingOptions fo = MatchFormattingOptions.SubsetMatch, bool escapeRegEx = true, bool useRegExSubstitutions = false, bool removeEmptyParagraph = true)
         {
             string tText = Text;
             MatchCollection mc = Regex.Matches(tText, escapeRegEx ? Regex.Escape(oldValue) : oldValue, options);
@@ -3988,18 +4013,18 @@ namespace Novacode
             }
         }
 
-		/// <summary>
-		/// Find pattern regex must return a group match.
-		/// </summary>
-		/// <param name="findPattern">Regex pattern that must include one group match. ie (.*)</param>
-		/// <param name="regexMatchHandler">A func that accepts the matching find grouping text and returns a replacement value</param>
-		/// <param name="trackChanges"></param>
-		/// <param name="options"></param>
-		/// <param name="newFormatting"></param>
-		/// <param name="matchFormatting"></param>
-		/// <param name="fo"></param>
-		/// <param name="removeEmptyParagraph">Remove empty paragraph</param>
-		public void ReplaceText(string findPattern, Func<string, string> regexMatchHandler, bool trackChanges = false, RegexOptions options = RegexOptions.None, Formatting newFormatting = null, Formatting matchFormatting = null, MatchFormattingOptions fo = MatchFormattingOptions.SubsetMatch, bool removeEmptyParagraph = true)
+        /// <summary>
+        /// Find pattern regex must return a group match.
+        /// </summary>
+        /// <param name="findPattern">Regex pattern that must include one group match. ie (.*)</param>
+        /// <param name="regexMatchHandler">A func that accepts the matching find grouping text and returns a replacement value</param>
+        /// <param name="trackChanges"></param>
+        /// <param name="options"></param>
+        /// <param name="newFormatting"></param>
+        /// <param name="matchFormatting"></param>
+        /// <param name="fo"></param>
+        /// <param name="removeEmptyParagraph">Remove empty paragraph</param>
+        public void ReplaceText(string findPattern, Func<string, string> regexMatchHandler, bool trackChanges = false, RegexOptions options = RegexOptions.None, Formatting newFormatting = null, Formatting matchFormatting = null, MatchFormattingOptions fo = MatchFormattingOptions.SubsetMatch, bool removeEmptyParagraph = true)
         {
             var matchCollection = Regex.Matches(Text, findPattern, options);
 
@@ -4162,21 +4187,34 @@ namespace Novacode
         /// <summary>
         /// 找尋符合指定格式的文字節點
         /// </summary>
-        /// <param name="ff"></param>
+        /// <param name="matchFormatting"></param>
         /// <returns></returns>
-        public List<XNode> FindMatchFormattedNodes(Formatting ff)
+        public List<XElement> FindMatchFormattedNodes(Formatting matchFormatting)
         {
+            List<XElement> resultset = new List<XElement>();
 
+            GetMatchFormattedNodesRecursive(Xml, matchFormatting, ref resultset);
+
+            return resultset;
         }
 
         /// <summary>
         /// 找尋符合指定格式的所有文字
         /// </summary>
-        /// <param name="ff"></param>
+        /// <param name="matchFormatting"></param>
         /// <returns></returns>
-        public List<string> FindMatchFormattedTexts(Formatting ff)
+        public List<string> FindMatchFormattedTexts(Formatting matchFormatting)
         {
+            List<XElement> resultset = new List<XElement>();
 
+            GetMatchFormattedNodesRecursive(Xml, matchFormatting, ref resultset);
+
+            List<string> textresult = new List<string>();
+
+            foreach (var ele in resultset)
+                textresult.Add(HelperFunctions.GetText(ele));
+
+            return textresult;
         }
 
         /// <summary>
