@@ -430,38 +430,59 @@ namespace Novacode
         /// 找尋符合指定格式的文字節點
         /// </summary>
         /// <param name="matchFormatting"></param>
+        /// <param name="IsIncludeHeader"></param>
+        /// <param name="IsIncludeFooter"></param>
         /// <returns></returns>
-        public virtual List<XElement> FindMatchFormattedNodes(Formatting matchFormatting, 
-            bool IsIncludeHeader, bool IsIncludeFooter)
+        public virtual List<XElement> FindMatchFormattedNodes(Formatting matchFormatting,
+            bool IsIncludeHeader = false, bool IsIncludeFooter = false)
         {
-            // ReplaceText in Headers of the document.
-            var headerList = new List<Header> { Document.Headers.first, Document.Headers.even, Document.Headers.odd };
-            foreach (var header in headerList)
-                if (header != null)
-                    foreach (var paragraph in header.Paragraphs)
-                        paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
+            List<XElement> ctnr_resultset = new List<XElement>();
 
-            // ReplaceText int main body of document.
+            if (IsIncludeHeader)
+            {
+                // ReplaceText in Headers of the document.
+                var headerList = new List<Header> { Document.Headers.first, Document.Headers.even, Document.Headers.odd };
+                foreach (var header in headerList)
+                    if (header != null)
+                        foreach (var paragraph in header.Paragraphs)
+                            ctnr_resultset.AddRange(paragraph.FindMatchFormattedNodes(matchFormatting));
+            }
+
+            // 收集各個段落的結果
             foreach (var paragraph in Paragraphs)
-                paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
+                ctnr_resultset.AddRange(paragraph.FindMatchFormattedNodes(matchFormatting));
 
-            // ReplaceText in Footers of the document.
-            var footerList = new List<Footer> { Document.Footers.first, Document.Footers.even, Document.Footers.odd };
-            foreach (var footer in footerList)
-                if (footer != null)
-                    foreach (var paragraph in footer.Paragraphs)
-                        paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
+            if (IsIncludeFooter)
+            {
+                // ReplaceText in Footers of the document.
+                var footerList = new List<Footer> { Document.Footers.first, Document.Footers.even, Document.Footers.odd };
+                foreach (var footer in footerList)
+                    if (footer != null)
+                        foreach (var paragraph in footer.Paragraphs)
+                            ctnr_resultset.AddRange(paragraph.FindMatchFormattedNodes(matchFormatting));
+            }
+
+            return ctnr_resultset;
         }
 
         /// <summary>
         /// 找尋符合指定格式的所有文字
         /// </summary>
         /// <param name="matchFormatting"></param>
+        /// <param name="IsIncludeHeader"></param>
+        /// <param name="IsIncludeFooter"></param>
         /// <returns></returns>
         public virtual List<string> FindMatchFormattedTexts(Formatting matchFormatting,
-            bool IsIncludeHeader, bool IsIncludeFooter)
+            bool IsIncludeHeader =false, bool IsIncludeFooter = false)
         {
+            List<XElement> all_element_rst = FindMatchFormattedNodes(matchFormatting, IsIncludeHeader, IsIncludeFooter);
 
+            List<string> all_texts = new List<string>();
+
+            foreach (var ele in all_element_rst)
+                all_texts.Add(HelperFunctions.GetText(ele));
+
+            return all_texts;
         }
 
         public virtual List<int> FindAll(string str, RegexOptions options)
@@ -538,18 +559,18 @@ namespace Novacode
                         paragraph.ReplaceText(searchValue, newValue, trackChanges, options, newFormatting, matchFormatting, formattingOptions, escapeRegEx, useRegExSubstitutions, removeEmptyParagraph);
         }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="searchValue">Value to find</param>
-		/// <param name="regexMatchHandler">A Func that accepts the matching regex search group value and passes it to this to return the replacement string</param>
-		/// <param name="trackChanges">Enable trackchanges</param>
-		/// <param name="options">Regex options</param>
-		/// <param name="newFormatting"></param>
-		/// <param name="matchFormatting"></param>
-		/// <param name="formattingOptions"></param>
-		/// <param name="removeEmptyParagraph">Remove empty paragraph</param>
-		public virtual void ReplaceText(string searchValue, Func<string, string> regexMatchHandler, bool trackChanges = false, RegexOptions options = RegexOptions.None, Formatting newFormatting = null, Formatting matchFormatting = null, MatchFormattingOptions formattingOptions = MatchFormattingOptions.SubsetMatch, bool removeEmptyParagraph = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchValue">Value to find</param>
+        /// <param name="regexMatchHandler">A Func that accepts the matching regex search group value and passes it to this to return the replacement string</param>
+        /// <param name="trackChanges">Enable trackchanges</param>
+        /// <param name="options">Regex options</param>
+        /// <param name="newFormatting"></param>
+        /// <param name="matchFormatting"></param>
+        /// <param name="formattingOptions"></param>
+        /// <param name="removeEmptyParagraph">Remove empty paragraph</param>
+        public virtual void ReplaceText(string searchValue, Func<string, string> regexMatchHandler, bool trackChanges = false, RegexOptions options = RegexOptions.None, Formatting newFormatting = null, Formatting matchFormatting = null, MatchFormattingOptions formattingOptions = MatchFormattingOptions.SubsetMatch, bool removeEmptyParagraph = true)
         {
             if (string.IsNullOrEmpty(searchValue))
                 throw new ArgumentException("oldValue cannot be null or empty", "searchValue");
