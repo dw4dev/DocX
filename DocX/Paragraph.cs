@@ -1855,7 +1855,7 @@ namespace Novacode
 
             XElement rPr = Xml.Element(XName.Get("rPr", DocX.w.NamespaceName));
 
-            if (HelperFunctions.ContainsEveryChildOf(matchFormatting.Xml, rPr, fo))
+            if (rPr != null && HelperFunctions.ContainsEveryChildOf(matchFormatting.Xml, rPr, fo))
             {
                 while ((pickup.Name.LocalName != "r") && (pickup.Name.LocalName != "pPr"))
                     pickup = Xml.Parent;
