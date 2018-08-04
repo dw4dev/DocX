@@ -2045,7 +2045,7 @@ namespace Novacode
             DateTime insert_datetime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Utc);
 
             // Get the first run effected by this Insert
-            Run run = GetFirstRunEffectedByEdit(index);
+            Run run = GetFirstRunEffectedByEdit(index-1);
 
             if (run == null)
             {
@@ -2171,7 +2171,7 @@ namespace Novacode
                             else
                             {
                                 // Split this run at the point you want to insert
-                                XElement[] splitRun = Run.SplitRun(run, index);
+                                XElement[] splitRun = Run.SplitRun(run, index-1);
 
                                 // Replace the origional run
                                 run.Xml.ReplaceWith
@@ -4008,7 +4008,7 @@ namespace Novacode
                     if (!String.IsNullOrEmpty(repl))
                         InsertText(m.Index + m.Length, repl, trackChanges, newFormatting);
                     if (m.Length > 0)
-                        RemoveText(m.Index, m.Length, trackChanges, removeEmptyParagraph);
+                        RemoveText(m.Index-1, m.Length, trackChanges, removeEmptyParagraph);
                 }
             }
         }
